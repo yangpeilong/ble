@@ -33,6 +33,7 @@ class BluetoothLEManager private constructor(private val context: Context) :
         val UUID_UART_SERVICE = UUID.fromString("42880008-1129-484e-af8c-05609d2ec3d7")
         val UUID_NOTIFY_DATA = UUID.fromString("4288000a-1129-484e-af8c-05609d2ec3d7")
         val UUID_WRITE_DATA = UUID.fromString("4288000c-1129-484e-af8c-05609d2ec3d7")
+        val UUID_READ_DATA = UUID.fromString("4288000b-1129-484e-af8c-05609d2ec3d7")
         val CLIENT_CHARACTERISTIC_CONFIG = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
 
         @SuppressLint("StaticFieldLeak")
@@ -57,7 +58,7 @@ class BluetoothLEManager private constructor(private val context: Context) :
     var onBluetoothLEReadDatasListener: OnBluetoothLEReadDatasListener? = null
     private lateinit var mWriteCharateristic:BluetoothGattCharacteristic
     private lateinit var mNotifyCharacteristic:BluetoothGattCharacteristic
-
+    private lateinit var mReadCharacteristic:BluetoothGattCharacteristic
 
     fun initBluetoothLE(): Int {
         Log.i(TAG, "initBluetoothLE: do this")
@@ -198,6 +199,9 @@ class BluetoothLEManager private constructor(private val context: Context) :
             }
             BluetoothLeService.STATE_CHARACTERISTIC_READ -> {
                 Log.i(TAG, "characteristics read: " + characteristic?.value.toString())
+                if (onBluetoothLEReadDatasListener != null) {
+                    onBluetoothLEReadDatasListener!!.onBluetoothLeVersionInfo(characteristic!!.value)
+                }
             }
             BluetoothLeService.STATE_CHARACTERISTIC_CHANGED ->  {
                 Log.i(TAG, "characteristics changed: " + characteristic?.value.toString())
@@ -220,6 +224,16 @@ class BluetoothLEManager private constructor(private val context: Context) :
         mBluetoothLeService!!.writeCharacteristic(mWriteCharateristic)
     }
 
+    /**
+     * 读设备数据
+     */
+    fun readCharacteristic() {
+        if (!this::mWriteCharateristic.isInitialized && mBluetoothLeService == null) {
+            return
+        }
+        mBluetoothLeService!!.readCharacteristic(mWriteCharateristic)
+    }
+
     @RequiresApi(18)
     fun onGattServiceAuth(gatt: BluetoothGatt): Boolean {
         val gattService = gatt.getService(UUID_UART_SERVICE)
@@ -228,7 +242,8 @@ class BluetoothLEManager private constructor(private val context: Context) :
                 gattService.getCharacteristic(UUID_WRITE_DATA)
             mNotifyCharacteristic =
                 gattService.getCharacteristic(UUID_NOTIFY_DATA)
-            if (mWriteCharateristic != null && mNotifyCharacteristic != null) {
+            mReadCharacteristic = gattService.getCharacteristic(UUID_READ_DATA)
+            if (mWriteCharateristic != null && mNotifyCharacteristic != null && mReadCharacteristic != null) {
                 //设置开启设备的推送通道
                 val isNotifyState = gatt.setCharacteristicNotification(mNotifyCharacteristic, true)
                 if (isNotifyState) {
@@ -272,6 +287,7 @@ class BluetoothLEManager private constructor(private val context: Context) :
      */
     interface OnBluetoothLEReadDatasListener{
         fun onBluetoothLEReadDatas(dataBytes: ByteArray?)
+        fun onBluetoothLeVersionInfo(dataBytes: ByteArray?)
     }
 
 
