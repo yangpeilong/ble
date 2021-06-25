@@ -1,0 +1,60 @@
+apply plugin: 'com.android.library'
+//apply from: '../fat-aar.gradle'
+//apply from: '../nexus.gradle'
+
+def getBuild_code() {
+    def cmd = ['sh', '-c', 'git rev-parse --short HEAD'] as String[]
+    return cmd.execute([], project.rootDir).text.trim()
+}
+
+android {
+    compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
+    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+
+    defaultConfig {
+        minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
+        targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
+        versionCode 1
+        versionName project.VERSION
+        manifestPlaceholders = [SDK_VERSION: project.VERSION,
+                                BUILD_NO   : 1000]
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            // Zipalign优化
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            //shrinkResources true
+            // 混淆
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    useLibrary 'org.apache.http.legacy'
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+//    if (Boolean.valueOf(project.QDING_CONFIG_USE_MAVEN)) {
+//        embedded project(":FoundationLibrary")
+//    } else {
+        compile project(":FoundationLibrary")
+//    }
+    testCompile 'junit:junit:4.12'
+    androidTestCompile('com.android.support.test:runner:0.5'){
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+}

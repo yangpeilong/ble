@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:orientation="vertical">
+    <!-- 开门测试 -->
+    <TextView
+        android:id="@+id/open_door_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="开门测试"
+        android:textColor="#ffffff"
+        android:textSize="17sp"
+        android:background="@drawable/ic_button_background"/>
+    <!-- 配置设备 -->
+    <TextView
+        android:id="@+id/config_device"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="配置设备"
+        android:textColor="#ffffff"
+        android:textSize="17sp"
+        android:background="@drawable/ic_button_background"/>
+    <!-- 读取配置 -->
+    <TextView
+        android:id="@+id/read_config"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="读取配置"
+        android:textColor="#ffffff"
+        android:textSize="17sp"
+        android:background="@drawable/ic_button_background"/>
+    <!-- 设备升级 -->
+    <TextView
+        android:id="@+id/device_upgrade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="设备升级"
+        android:textColor="#ffffff"
+        android:textSize="17sp"
+        android:background="@drawable/ic_button_background"/>
+    <!-- 测试结果 -->
+    <TextView
+        android:id="@+id/test_result"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"/>
+</LinearLayout>
