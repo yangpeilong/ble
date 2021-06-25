@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/FoundationLibrary" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/leblib" />
+            <option value="$PROJECT_DIR$/test_app" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
